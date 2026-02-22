@@ -28,9 +28,9 @@ http.route({
 
         const { success } = await ctx.runMutation(api.users.upgradeToPro, {
           email: session.customer_details.email,
-          stripeCustomerId: session.customer,
+          stripeCustomerId: session.customer ?? session.customer_details.email,
           stripeSessionId: session.id,
-          amount: session.amount_total,
+          amount: session.amount_total ?? 0,
         });
 
         if (success) {
