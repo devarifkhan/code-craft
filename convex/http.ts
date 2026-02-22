@@ -7,30 +7,30 @@ import { api, internal } from "./_generated/api";
 const http = httpRouter();
 
 http.route({
-  path: "/lemon-squeezy-webhook",
+  path: "/stripe-webhook",
   method: "POST",
   handler: httpAction(async (ctx, request) => {
     const payloadString = await request.text();
-    const signature = request.headers.get("X-Signature");
+    const signature = request.headers.get("stripe-signature");
 
     if (!signature) {
-      return new Response("Missing X-Signature header", { status: 400 });
+      return new Response("Missing stripe-signature header", { status: 400 });
     }
 
     try {
-      const payload = await ctx.runAction(internal.lemonSqueezy.verifyWebhook, {
+      const payload = await ctx.runAction(internal.stripe.verifyWebhook, {
         payload: payloadString,
         signature,
       });
 
-      if (payload.meta.event_name === "order_created") {
-        const { data } = payload;
+      if (payload.type === "checkout.session.completed") {
+        const session = payload.data.object;
 
         const { success } = await ctx.runMutation(api.users.upgradeToPro, {
-          email: data.attributes.user_email,
-          lemonSqueezyCustomerId: data.attributes.customer_id.toString(),
-          lemonSqueezyOrderId: data.id,
-          amount: data.attributes.total,
+          email: session.customer_details.email,
+          stripeCustomerId: session.customer,
+          stripeSessionId: session.id,
+          amount: session.amount_total,
         });
 
         if (success) {
