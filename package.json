@@ -9,16 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.6.0",
+    "@clerk/nextjs": "^6.23.3",
     "@monaco-editor/react": "^4.6.0",
-    "convex": "^1.17.3",
+    "convex": "^1.32.0",
     "framer-motion": "^11.13.1",
     "lucide-react": "^0.464.0",
-    "next": "15.0.3",
+    "next": "15.5.12",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "react-hot-toast": "^2.4.1",
-    "react-syntax-highlighter": "^15.6.1",
+    "react-syntax-highlighter": "^16.1.0",
     "svix": "^1.42.0",
     "zustand": "^5.0.1"
   },
