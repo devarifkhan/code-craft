@@ -32,11 +32,14 @@ http.route({
             ? session.customer
             : session.customer?.id ?? email;
 
+        const userId = session.metadata?.userId ?? undefined;
+
         const { success } = await ctx.runMutation(api.users.upgradeToPro, {
           email,
           stripeCustomerId: customerId,
           stripeSessionId: session.id,
           amount: session.amount_total ?? 0,
+          userId,
         });
 
         if (success) {
