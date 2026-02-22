@@ -24,11 +24,17 @@ http.route({
       });
 
       if (payload.type === "checkout.session.completed") {
-        const session = payload.data.object;
+        const session = payload.data.object as any;
+
+        const email = session.customer_details?.email ?? session.customer_email ?? "";
+        const customerId =
+          typeof session.customer === "string"
+            ? session.customer
+            : session.customer?.id ?? email;
 
         const { success } = await ctx.runMutation(api.users.upgradeToPro, {
-          email: session.customer_details.email,
-          stripeCustomerId: session.customer ?? session.customer_details.email,
+          email,
+          stripeCustomerId: customerId,
           stripeSessionId: session.id,
           amount: session.amount_total ?? 0,
         });
